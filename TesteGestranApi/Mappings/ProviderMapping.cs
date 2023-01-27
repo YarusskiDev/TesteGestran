@@ -17,7 +17,9 @@ namespace TesteGestranApi.Mappings
             builder.Property(x => x.Telephone).IsRequired().HasColumnType("varchar(25)");
 
             builder.Property(x => x.Email).IsRequired().HasColumnType("varchar(30)");
-           
+
+            builder.HasMany(x => x.Adresses).WithOne(x => x.Provider).HasForeignKey(x => x.Id_Provider);
+
             builder.ToTable("Providers");
                 
         }

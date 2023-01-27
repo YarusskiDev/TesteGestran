@@ -2,14 +2,15 @@
 {
     public class Adress : Entity
     {
-        public string Cep { get; set; }
-        public string Rua { get; set; }
-        public string Complemento { get; set; }
-        public string Cidade { get; set; }
-        public string Estado { get; set; }
-        public string Pais { get; set; }
-        public int Numero { get; set; }
+        public int? Id_Provider { get; set; }
+        public string ZipCode { get; set; }
+        public string Street { get; set; }
+        public string Complement { get; set; }
+        public string City { get; set; }
+        public string State { get; set; }
+        public string Country { get; set; }
+        public int Number { get; set; }
 
-        public List<Provider> Provider { get; set; }
+        public Provider Provider { get; set; }
     }
 }

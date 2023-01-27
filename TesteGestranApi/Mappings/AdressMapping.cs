@@ -10,21 +10,19 @@ namespace TesteGestranApi.Mappings
         {
             builder.HasKey(x => x.Id);
 
-            builder.Property(x => x.Pais).IsRequired().HasColumnType("varchar(50)");
+            builder.Property(x => x.Country).IsRequired().HasColumnType("varchar(50)");
 
-            builder.Property(x => x.Cep).IsRequired().HasColumnType("varchar(50)");
+            builder.Property(x => x.ZipCode).IsRequired().HasColumnType("varchar(50)");
 
-            builder.Property(x => x.Estado).IsRequired().HasColumnType("varchar(50)");
+            builder.Property(x => x.State).IsRequired().HasColumnType("varchar(50)");
 
-            builder.Property(x => x.Cidade).IsRequired().HasColumnType("varchar(50)");
+            builder.Property(x => x.City).IsRequired().HasColumnType("varchar(50)");
 
-            builder.Property(x => x.Rua).IsRequired().HasColumnType("varchar(50)");
+            builder.Property(x => x.Street).IsRequired().HasColumnType("varchar(50)");
 
-            builder.Property(x => x.Numero).IsRequired().HasColumnType("int");
+            builder.Property(x => x.Number).IsRequired().HasColumnType("int");
 
-            builder.Property(x => x.Complemento).HasColumnType("varchar(50)");
-
-            builder.HasMany(x => x.Provider).WithOne(x => x.Adress).HasForeignKey(x => x.Id_Adress);
+            builder.Property(x => x.Complement).HasColumnType("varchar(50)");
 
             builder.ToTable("Adress");
         }
