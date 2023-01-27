@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using System.ComponentModel;
+using System.Text.Json.Serialization;
 
 namespace TesteGestranApi.Models
 {
@@ -8,8 +9,6 @@ namespace TesteGestranApi.Models
         public string Cnpj { get; set; }
         public string Telephone { get; set; }
         public string Email { get; set; }
-
-        [JsonIgnore]
-        public List<Adress> Adresses { get; set; }
+        public virtual List<Adress> Adresses { get; set; }
     }
 }

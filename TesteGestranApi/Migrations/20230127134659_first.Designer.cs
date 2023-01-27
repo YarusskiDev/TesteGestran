@@ -12,7 +12,7 @@ using TesteGestranApi.ContextEntity;
 namespace TesteGestranApi.Migrations
 {
     [DbContext(typeof(ContextEntityFrame))]
-    [Migration("20230127115617_first")]
+    [Migration("20230127134659_first")]
     partial class first
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

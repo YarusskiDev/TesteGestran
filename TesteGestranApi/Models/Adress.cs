@@ -1,4 +1,7 @@
-﻿namespace TesteGestranApi.Models
+﻿using System.ComponentModel;
+using System.Text.Json.Serialization;
+
+namespace TesteGestranApi.Models
 {
     public class Adress : Entity
     {
@@ -10,7 +13,7 @@
         public string State { get; set; }
         public string Country { get; set; }
         public int Number { get; set; }
-
         public Provider Provider { get; set; }
+
     }
 }

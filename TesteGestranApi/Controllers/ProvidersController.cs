@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TesteGestranApi.ContextEntity;
+using TesteGestranApi.Dto;
+using TesteGestranApi.Interfaces.Service;
 using TesteGestranApi.Models;
 
 namespace TesteGestranApi.Controllers
@@ -15,20 +17,30 @@ namespace TesteGestranApi.Controllers
     public class ProvidersController : ControllerBase
     {
         private readonly ContextEntityFrame _context;
+        private readonly IServiceApiProvider _serviceProvider;
+        private readonly IServiceApiAdress _serviceAdress;
 
-        public ProvidersController(ContextEntityFrame context)
+        public ProvidersController(ContextEntityFrame context, IServiceApiProvider serviceProvider, IServiceApiAdress serviceAdress)
         {
             _context = context;
+            _serviceProvider = serviceProvider;
+            _serviceAdress = serviceAdress;
         }
 
-        // GET: api/Providers
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Provider>>> GetProviders()
+        public async Task<ActionResult<IEnumerable<Provider>>> GetProviders(string? name, string? city, string? companyCode)
         {
-            return await _context.Providers.ToListAsync();
+            return await (from p in _context.Providers.Include(p => p.Adresses)
+                          join e in _context.Adresses on p.Id equals e.Id_Provider
+                          where
+                          (string.IsNullOrEmpty(name) || p.Name.ToLower() == name.ToLower()) &&
+                          (string.IsNullOrEmpty(city) || e.City.ToLower() == city.ToLower()) &&
+                          (string.IsNullOrEmpty(companyCode) || p.Cnpj.ToLower() == companyCode.ToLower())
+                          select p)
+                          .ToListAsync();
         }
 
-        // GET: api/Providers/5
+
         [HttpGet("{id}")]
         public async Task<ActionResult<Provider>> GetProvider(int id)
         {
@@ -42,8 +54,6 @@ namespace TesteGestranApi.Controllers
             return provider;
         }
 
-        // PUT: api/Providers/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         public async Task<IActionResult> PutProvider(int id, Provider provider)
         {
@@ -56,7 +66,7 @@ namespace TesteGestranApi.Controllers
 
             try
             {
-                await _context.SaveChangesAsync();
+                await _serviceProvider.Atualizar(provider);
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -73,30 +83,26 @@ namespace TesteGestranApi.Controllers
             return NoContent();
         }
 
-        // POST: api/Providers
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Provider>> PostProvider(Provider provider)
+        public async Task<ActionResult<Provider>> PostProvider(ProviderDto provider)
         {
-            _context.Providers.Add(provider);
-            await _context.SaveChangesAsync();
+            Provider providerInsert = new Provider()
+            {
+                Name = provider.Name,
+                Cnpj = provider.Cnpj,
+                Email = provider.Email,
+                Telephone = provider.Telephone
+            };
 
-            return CreatedAtAction("GetProvider", new { id = provider.Id }, provider);
+            await _serviceProvider.Adicionar(providerInsert);
+
+            return NoContent();
         }
 
-        // DELETE: api/Providers/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteProvider(int id)
         {
-            var provider = await _context.Providers.FindAsync(id);
-            if (provider == null)
-            {
-                return NotFound();
-            }
-
-            _context.Providers.Remove(provider);
-            await _context.SaveChangesAsync();
-
+            await _serviceProvider.Remover(id);
             return NoContent();
         }
 
